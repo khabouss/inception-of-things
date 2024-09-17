@@ -1,0 +1,43 @@
+MASTER_IP = "192.168.56.110"
+WORKER_IP = "192.168.56.111"
+BOX_NAME = "generic/alpine312"
+VM_MEMORY = "1024"
+VM_CPUS = 1
+MASTER_HOSTNAME = "majdahimS"
+WORKER_HOSTNAME = "majdahimSW"
+FLANNEL_IFACE = "eth1"
+SYNCHED_FOLDER = "./confs"
+MASTER_PROVISION_SCRIPT_PATH = "./scripts/provision_master.sh"
+WORKER_PROVISION_SCRIPT_PATH = "./scripts/provision_worker.sh"
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define MASTER_HOSTNAME do |master|
+    master.vm.box = BOX_NAME
+    master.vm.network "private_network", ip: MASTER_IP
+    master.vm.hostname = MASTER_HOSTNAME
+	master.vm.synced_folder SYNCHED_FOLDER, "/vagrant", type:"virtualbox"
+    master.vm.provider "virtualbox" do |vb|
+      vb.memory = VM_MEMORY
+	  vb.cpus = VM_CPUS
+	  vb.name = MASTER_HOSTNAME
+	end
+
+    master.vm.provision "shell", path: MASTER_PROVISION_SCRIPT_PATH
+  end
+   
+  config.vm.define WORKER_HOSTNAME do |node1|
+    node1.vm.box = BOX_NAME
+    node1.vm.hostname = WORKER_HOSTNAME
+	node1.vm.synced_folder SYNCHED_FOLDER, "/vagrant", type:"virtualbox"
+	node1.vm.network "private_network", ip: WORKER_IP
+    node1.vm.provider "virtualbox" do |vb|
+      vb.memory = VM_MEMORY
+      vb.cpus = VM_CPUS
+      vb.name = WORKER_HOSTNAME
+	end
+
+    node1.vm.provision "shell", path: WORKER_PROVISION_SCRIPT_PATH
+  end
+
+end
