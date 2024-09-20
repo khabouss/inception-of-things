@@ -1,0 +1,23 @@
+
+VM_MEMORY = "2048"
+VM_CPUS = 1
+SYNCHED_FOLDER = "./confs"
+VM_NAME = "majdahimS"
+BOX_NAME = "generic/alpine312"
+SERVER_IP = "192.168.56.110"
+SETUP_SCRIPT_PATH = "./scripts/setup.sh"
+
+Vagrant.configure("2") do |config|
+	config.vm.box = BOX_NAME
+        config.vm.define VM_NAME do |master|
+	  master.vm.network "private_network", ip: SERVER_IP
+	  master.vm.synced_folder SYNCHED_FOLDER , "/vagrant", type: "virtualbox"
+	  master.vm.hostname = VM_NAME
+	  master.vm.provider "virtualbox" do |vb|
+		  vb.memory = VM_MEMORY
+		  vb.cpus = VM_CPUS
+		  vb.name = VM_NAME
+	  end
+          master.vm.provision "shell", path: SETUP_SCRIPT_PATH
+      end
+end
