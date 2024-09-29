@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: iot-application
+  name: majdahim-k3d-dev
   namespace: argocd
 spec:
   project: default
@@ -9,13 +9,12 @@ spec:
     repoURL: https://github.com/AmineAjdahim/majdahim-k3d.git
     targetRevision: HEAD
     path: dev
-  destination: 
+  destination:
     server: https://kubernetes.default.svc
     namespace: dev
   syncPolicy:
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
     automated:
       selfHeal: true
       prune: true
-      allowEmpty: true

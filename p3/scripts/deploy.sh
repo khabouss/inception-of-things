@@ -1,4 +1,4 @@
-#!/bin/bash
+# #!/bin/bash
 
 # Define colors
 GR='\033[0;32m'  # Green
@@ -84,7 +84,7 @@ fi
 
 # Create a CRD for ArgoCD
 log_message "Creating a CRD for ArgoCD..."
-if ! sudo kubectl apply -f confs/application.yaml; then
+if ! sudo kubectl apply -f ./confs/application.yaml; then
     log_error "Failed to create CRD. Exiting."
     exit 1
 fi
@@ -94,10 +94,6 @@ log_message "Waiting for application to be created..."
 while [ "$POD_STATE" != "Running" ]; do echo "Waiting for app to be created";
 POD_STATE=$(sudo kubectl get po -n dev  --output="jsonpath={.items..phase}") && sleep 10;
 done;
-# POD_STATE=""
-# while [ "$POD_STATE" != "Running" ]; do
-#     POD_STATE=$(sudo kubectl get po -n dev --output="jsonpath={.items..phase}") && sleep 10
-# done
 
 # Forward port to ArgoCD server
 log_message "Forwarding port 8080 to the argocd-server service..."
